@@ -4,8 +4,22 @@ module.exports = {
     outputDir: process.env.NODE_ENV === 'production'? 'dist' : 'devdist',
     lintOnSave: true,
     chainWebpack: (config) => {
-
-    },
+        config.module.rules.delete('eslint');
+    },/*
+    configureWebPack: (config) => {
+        config.resolve = {
+            extensions: ['.js', '.json', 'vue'], //要解析的文件类型
+            alias: {
+                "@": path.resolve(__dirname, './src'),
+                'public': path.resolve(__dirname, './public'),
+                'components': path.resolve(__dirname, './src/components'),
+                'common': path.resolve(__dirname, './src/common'),
+                'api': path.resolve(__dirname, './src/api'),
+                'views': path.resolve(__dirname, './src/views'),
+                'data': path.resolve(__dirname, './src/data')
+            }
+        }
+    },*/
     productionSourceMap: false,
     css:{
         extract: true,
