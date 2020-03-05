@@ -39,84 +39,90 @@
   </div>
 </template>
 <script>
+import { reactive, ref } from '@vue/composition-api';
+// import { validateCode, validateUsername, validatePassword, validatePasswordRepeat } from '../../utils/validator.js';
 export default {
   name: "login",
-  data() {
-      var validateCode = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('请输入验证码'));
-        } else {
-          callback();
-        }
-      };
-      var validateUsername = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入用户名'));
-        } else {
-          callback();
-        }
-      };
-      var validatePassword = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
-        } else {
-          callback();
-        }
-      };
-      var validatePasswordRepeat = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value != this.ruleForm.password) {
-          callback(new Error('重复密码不正确'));
-        } else {
-          callback();
-        }
-      };
-      return {
-        ruleForm: {
-          username: '',
-          password: '',
-          passwordRepeat: '',
-          code: ''
-        },
-        rules: {
-          username: [
-            { validator: validateUsername, trigger: 'blur' }
-          ],
-          password: [
-            { validator: validatePassword, trigger: 'blur' }
-          ],
-          passwordRepeat: [
-            { validator: validatePasswordRepeat, trigger: 'blur' }
-          ],
-          code: [
-            { validator: validateCode, trigger: 'blur' }
-          ]
-        },
-        menuTab: [
-        { txt: "登陆", current: true, type:'login' },
-        { txt: "注册", current: false, type: 'reg' }
-        ],
-        mode: 'reg'
-      };
-    },
-    methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-      toggleMenu(item){
-        this.menuTab.forEach(elem => elem.current = false);
-        item.current = true;
-        this.mode = item.type;
+  setup(props, context){
+    let validateCode = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('请输入验证码'));
+      } else {
+        callback();
       }
+    };
+    let validateUsername = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入用户名'));
+      } else {
+        callback();
+      }
+    };
+    let validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        callback();
+      }
+    };
+    let validatePasswordRepeat = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value != ruleForm.password) {
+        callback(new Error('重复密码不正确'));
+      } else {
+        callback();
+      }
+    };
+    const ruleForm = reactive({
+      username: '',
+      password: '',
+      passwordRepeat: '',
+      code: ''
+    });
+    const rules = reactive({
+      username: [
+        { validator: validateUsername, trigger: 'blur' }
+      ],
+      password: [
+        { validator: validatePassword, trigger: 'blur' }
+      ],
+      passwordRepeat: [
+        { validator: validatePasswordRepeat, trigger: 'blur' }
+      ],
+      code: [
+        { validator: validateCode, trigger: 'blur' }
+      ]
+    });
+    const menuTab = reactive([
+      { txt: "登陆", current: true, type:'login' },
+      { txt: "注册", current: false, type: 'reg' }
+    ]); 
+    const mode = ref('login');
+    const toggleMenu = (item => {
+      menuTab.forEach(elem => elem.current = false);
+      item.current = true;
+      mode.value = item.type;
+    });
+    const submitForm = (formName => {
+      context.refs[formName].validate((valid) => {
+        if (valid) {
+          alert('submit!');
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    });
+    return {
+      ruleForm,
+      rules,
+      menuTab,
+      mode,
+      toggleMenu,
+      submitForm
     }
+  }
 };
 </script>
 
